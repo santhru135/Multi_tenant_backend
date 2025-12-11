@@ -39,5 +39,5 @@ A high-performance, scalable backend service built with FastAPI that implements 
 
 1. **Clone the repository**
    ```bash
-   git clone [https://github.com/yourusername/multi_tenant_backend.git](https://github.com/yourusername/multi_tenant_backend.git)
+   git clone [https://github.com/yourusername/multi_tenant_backend.git](https://github.com/santhru135/Multi_tenant_backend.git)
    cd multi_tenant_backend
