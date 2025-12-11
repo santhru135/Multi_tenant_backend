@@ -15,5 +15,5 @@ class LoginResponse(BaseModel):
 
 class TokenData(BaseModel):
     admin_id: str
-    organization: str
-    exp: Optional[datetime] = None
+    organization: str | None = None
+    is_superadmin: bool = False
