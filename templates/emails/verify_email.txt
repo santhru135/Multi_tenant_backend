@@ -1,0 +1,14 @@
+Hello {{ user_name }},
+
+Thank you for signing up for {{ app_name }}! To complete your registration, please verify your email address by clicking the link below:
+
+{{ verification_link }}
+
+If you didn't create an account with us, you can safely ignore this email.
+
+Thanks,
+The {{ app_name }} Team
+
+---
+If you're having trouble with the button above, copy and paste the URL below into your web browser:
+{{ verification_link }}
