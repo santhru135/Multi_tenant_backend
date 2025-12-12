@@ -77,7 +77,7 @@ async def tenant_middleware(request: Request, call_next):
     return response
 
 # Include API router
-app.include_router(api_router, prefix=settings.API_V1_STR)
+app.include_router(api_router, prefix="/org", tags=["Organization"])
 
 # Exception handlers
 @app.exception_handler(RequestValidationError)

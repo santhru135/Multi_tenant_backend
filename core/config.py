@@ -11,11 +11,11 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     
     # MongoDB
-    MONGODB_URL: str = "mongodb://localhost:27017"
-    MASTER_DB_NAME: str = "master_tenant"
+    MONGODB_URL: str = os.getenv("MONGODB_URL")
+    MASTER_DB_NAME: str = os.getenv("MASTER_DB_NAME")
     
     # Redis
-    REDIS_URL: str = "redis://localhost:6379/0"
+    REDIS_URL: str = os.getenv("REDIS_URL") 
     
     # CORS
     BACKEND_CORS_ORIGINS: list = ["*"]

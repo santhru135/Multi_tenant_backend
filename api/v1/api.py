@@ -1,9 +1,8 @@
 from fastapi import APIRouter
+from .organization import router as org_router
 
-from api.v1.endpoints import auth, tenants
-
+# Create router without any prefix
 api_router = APIRouter()
 
-# Include all endpoint routers
-api_router.include_router(auth.router, prefix="/auth", tags=["Authentication"])
-api_router.include_router(tenants.router, prefix="/tenants", tags=["Tenants"])
+# Include the organization router
+api_router.include_router(org_router, tags=["Organization"])
