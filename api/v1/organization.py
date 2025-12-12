@@ -1,13 +1,8 @@
-from datetime import datetime, timedelta
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, status, Response
-from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel, EmailStr
 from passlib.context import CryptContext
 from db.master_db import get_master_db
-from core.security import create_access_token, get_current_active_user
-from models.user import AdminUserInDB
-from core.config import settings
 
 # Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
