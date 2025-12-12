@@ -11,6 +11,11 @@ from db.database_router import db_router, DatabaseRouter
 from api.v1.api import api_router
 from core.security import get_current_active_user
 from models.user import AdminUserInDB
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+# In your exception handlers, add:
+logger.error(f"Error: {str(e)}", exc_info=True)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
