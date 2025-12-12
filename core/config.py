@@ -1,7 +1,9 @@
+import os
 from pydantic_settings import BaseSettings
-from typing import Optional
+from typing import List, Optional
 import secrets
-
+from dotenv import load_dotenv
+load_dotenv()
 class Settings(BaseSettings):
     PROJECT_NAME: str = "Multi-Tenant Backend"
     API_V1_STR: str = "/api/v1"
