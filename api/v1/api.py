@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from .organization import router as org_router
 from .endpoints.auth import router as auth_router
 
-# Create router with /api/v1 prefix
+# Create router
 api_router = APIRouter()
 
 # Include the organization router under /org

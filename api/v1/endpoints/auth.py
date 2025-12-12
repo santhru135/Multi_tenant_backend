@@ -1,10 +1,10 @@
 from datetime import timedelta
-from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
+from pydantic import BaseModel  # Add this import
 from db.master_db import get_master_db
 from core.config import settings
 from core.security import create_access_token
-from models.user import AdminUserInDB
 from passlib.context import CryptContext
 
 # Password hashing
@@ -15,6 +15,8 @@ router = APIRouter(tags=["Authentication"])
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+# ... rest of the file remains the same ...
 
 @router.post("/login", response_model=Token)
 async def login_for_access_token(

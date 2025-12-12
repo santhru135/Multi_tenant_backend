@@ -3,17 +3,14 @@ from fastapi import APIRouter, Depends, HTTPException, status, Response
 from pydantic import BaseModel, EmailStr
 from passlib.context import CryptContext
 from db.master_db import get_master_db
-
+from datetime import datetime
+from core.security import get_current_active_user
 # Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 router = APIRouter()
 
 # Response models
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
 class OrgCreate(BaseModel):
     organization_name: str
     email: EmailStr
@@ -34,7 +31,7 @@ class OrgOut(BaseModel):
 async def create_organization(org: OrgCreate):
     master_db = get_master_db()
     
-    # Check if organization exists
+    # Check if organization already exists
     existing = await master_db.organizations.find_one({"organization_name": org.organization_name})
     if existing:
         raise HTTPException(
@@ -88,7 +85,7 @@ async def get_organization(organization_name: str):
 async def update_organization(
     organization_name: str,
     new_org: OrgUpdate,
-    current_user: AdminUserInDB = Depends(get_current_active_user)
+    current_user: dict = Depends(get_current_active_user)
 ):
     master_db = get_master_db()
     
@@ -101,7 +98,7 @@ async def update_organization(
         )
     
     # Verify current user is the admin of this organization
-    if current_user.email != org["admin_email"]:
+    if current_user["email"] != org["admin_email"]:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not authorized to update this organization"
@@ -155,7 +152,7 @@ async def update_organization(
 @router.delete("/delete", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_organization(
     organization_name: str,
-    current_user: AdminUserInDB = Depends(get_current_active_user)
+    current_user: dict = Depends(get_current_active_user)
 ):
     master_db = get_master_db()
     
@@ -168,7 +165,7 @@ async def delete_organization(
         )
     
     # Verify current user is the admin of this organization
-    if current_user.email != org["admin_email"]:
+    if current_user["email"] != org["admin_email"]:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not authorized to delete this organization"
@@ -181,40 +178,3 @@ async def delete_organization(
     await master_db.organizations.delete_one({"organization_name": organization_name})
     
     return Response(status_code=status.HTTP_204_NO_CONTENT)
-    @router.post("/login", response_model=Token)
-async def login_for_access_token(
-    form_data: OAuth2PasswordRequestForm = Depends(),
-    auth_service: AuthService = Depends(get_auth_service)
-):
-    user = await auth_service.authenticate_user(form_data.username, form_data.password)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    
-    # Get the organization for this user
-    master_db = get_master_db()
-    org = await master_db.organizations.find_one({"admin_email": user.email})
-    if not org:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Organization not found for this user"
-        )
-    
-    # Create access token
-    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={
-            "sub": user.email,
-            "org": org["organization_name"],
-            "is_admin": True
-        },
-        expires_delta=access_token_expires
-    )
-    
-    return {
-        "access_token": access_token,
-        "token_type": "bearer"
-    }
