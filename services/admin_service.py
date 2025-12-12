@@ -11,7 +11,8 @@ from config.settings import settings
 class AdminService:
     def __init__(self):
         self.db = get_master_db()
-        self.admin_users = self.db.admin_users
+        self.admin_users = self.db.admins
+
 
     async def authenticate_admin(self, email: str, password: str) -> Optional[Dict[str, Any]]:
         admin = await self.get_admin_by_email(email)
