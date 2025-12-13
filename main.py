@@ -4,7 +4,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
-
 from core.config import settings
 from db.master_db import connect_master_db, close_master_db, get_master_db
 from db.database_router import db_router, DatabaseRouter
